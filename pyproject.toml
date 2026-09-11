@@ -43,7 +43,10 @@ Source = "https://github.com/AwaleSagar/Facial_Landmark_Detection"
 
 [dependency-groups]
 dev = [
+  "ipykernel>=6.29",
   "mypy>=1.13",
+  "nbclient>=0.10",
+  "nbformat>=5.10",
   "pytest>=8.3",
   "pytest-cov>=6.0",
   "ruff>=0.8",
@@ -118,10 +121,10 @@ convention = "google"
 python_version = "3.12"
 strict = true
 warn_unreachable = true
-files = ["src", "tests"]
+files = ["src", "tests", "scripts"]
 
 [[tool.mypy.overrides]]
-module = ["cv2.*", "matplotlib.*"]
+module = ["cv2.*", "matplotlib.*", "nbclient.*", "nbformat.*"]
 ignore_missing_imports = true
 
 # The library is checked strictly; tests are checked for real type errors but
