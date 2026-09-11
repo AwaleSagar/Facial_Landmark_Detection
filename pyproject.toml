@@ -111,7 +111,11 @@ max-complexity = 10
 convention = "google"
 
 [tool.mypy]
-python_version = "3.11"
+# Targets 3.12 rather than the 3.11 floor because numpy's bundled stubs now use
+# PEP 695 `type` statements, which mypy can only parse when asked for 3.12+.
+# Nothing is lost: the test matrix runs the suite on 3.11, where any 3.12-only
+# syntax in this package would fail at import.
+python_version = "3.12"
 strict = true
 warn_unreachable = true
 files = ["src", "tests"]
