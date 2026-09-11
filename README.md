@@ -117,7 +117,17 @@ Both value types are frozen, and landmark point arrays are read-only, so
 results cannot be mutated behind another caller's back. Every drawing function
 returns a new image rather than annotating the one it was given.
 
-`facial_landmark.ipynb` walks through the same ground with plots.
+`facial_landmark.ipynb` walks through the same ground with plots. Its outputs
+are committed, so it reads on GitHub without being run; figures are emitted as
+JPEG to keep the file around 400 KB rather than the ~2 MB of PNGs it would
+otherwise carry. After changing anything it demonstrates, refresh it with:
+
+```bash
+uv run python scripts/run_notebook.py
+```
+
+CI runs the same script with `--check` on every push, so the committed outputs
+cannot quietly drift from what the library actually does.
 
 ## Development
 
