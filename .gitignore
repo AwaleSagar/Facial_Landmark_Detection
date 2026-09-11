@@ -128,3 +128,19 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# --- 2026 toolchain ---
+.venv/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+uv.lock
+coverage.xml
+.coverage*
+
+# Downloaded model weights (resolved into a cache dir at runtime)
+models/
+*.onnx
+
+# CLI output
+out/

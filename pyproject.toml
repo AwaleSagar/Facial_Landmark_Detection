@@ -1,0 +1,127 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "facial-landmarks"
+version = "2.0.0"
+description = "Face detection and 68-point facial landmark localisation with pluggable OpenCV backends."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Sagar Awale" }]
+keywords = ["computer-vision", "face-detection", "facial-landmarks", "opencv", "yunet"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Image Recognition",
+  "Typing :: Typed",
+]
+dependencies = [
+  "numpy>=1.26",
+  "opencv-contrib-python>=4.9",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.8"]
+
+[project.scripts]
+facial-landmarks = "facial_landmarks.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/AwaleSagar/Facial_Landmark_Detection"
+Source = "https://github.com/AwaleSagar/Facial_Landmark_Detection"
+
+[dependency-groups]
+dev = [
+  "mypy>=1.13",
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "ruff>=0.8",
+  "matplotlib>=3.8",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/facial_landmarks"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = [
+  "E", "F", "W",      # pycodestyle / pyflakes
+  "I",                 # isort
+  "UP",                # pyupgrade
+  "B",                 # bugbear
+  "C4",                # comprehensions
+  "SIM",               # simplify
+  "RUF",               # ruff-specific
+  "ANN",               # annotations
+  "PTH",               # use pathlib
+  "RET", "ARG", "TID", "N", "D",
+  "S",                 # flake8-bandit security checks
+  "PL",                # pylint
+  "TRY",               # exception-handling antipatterns
+  "C90",               # mccabe complexity
+]
+ignore = [
+  "D107",  # __init__ docstring lives on the class
+  "D203", "D213",  # mutually exclusive with D211/D212
+  "PLR0913",  # backends legitimately take several tuning parameters
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Test names are the documentation; a docstring on every assert helper is noise.
+# Fixtures and doubles take positional args they deliberately ignore.
+"tests/*" = [
+  "D100", "D101", "D102", "D103", "D104", "D105",
+  "ANN001", "ANN002", "ANN003", "ANN201", "ANN202", "ANN204",
+  "ARG002", "ARG005",
+  "S101",  # assert is the point of a test
+  "PLR2004",  # literal comparisons are clearer than named constants here
+  "SLF001",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["cv2.*", "matplotlib.*"]
+ignore_missing_imports = true
+
+# The library is checked strictly; tests are checked for real type errors but
+# are not required to annotate every `def test_...(self) -> None`.
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+  "slow: tests that run the full model stack over the sample dataset",
+  "network: tests that require downloading model weights",
+]
+
+[tool.coverage.run]
+source = ["src/facial_landmarks"]
+branch = true
