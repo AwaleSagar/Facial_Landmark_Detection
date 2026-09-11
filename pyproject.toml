@@ -8,13 +8,17 @@ version = "2.0.0"
 description = "Face detection and 68-point facial landmark localisation with pluggable OpenCV backends."
 readme = "README.md"
 requires-python = ">=3.11"
-license = "Apache-2.0"
+# The repository ships the GPL v3 text with no "or at your option any later
+# version" grant, so this declares the conservative reading. Change it to
+# GPL-3.0-or-later if that was the intent.
+license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 authors = [{ name = "Sagar Awale" }]
 keywords = ["computer-vision", "face-detection", "facial-landmarks", "opencv", "yunet"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -48,6 +52,16 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/facial_landmarks"]
+
+# Ship the inline type information (PEP 561) alongside the modules.
+[tool.hatch.build.targets.wheel.force-include]
+"src/facial_landmarks/py.typed" = "facial_landmarks/py.typed"
+
+# Keep weights and sample portraits out of the sdist: lbfmodel.yaml alone is
+# 56 MB, and both are fetched or cloned rather than installed.
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "README.md", "LICENSE", "pyproject.toml"]
+exclude = ["data", "haar_classifier", "*.ipynb"]
 
 [tool.ruff]
 line-length = 100
